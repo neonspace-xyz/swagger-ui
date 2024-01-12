@@ -336,8 +336,10 @@ components:
       description: Response payload once Oauth flow is complete. Contains the JWT token needed for future requests to protected routes
       type: object
       required:
+        - oauth_token
+        - oauth_secret
+        - user_info
         - jwt_token
-        - eoa_wallet
       properties:
         oauth_token:
           description: 'The oauth token returned from twitter API'
@@ -345,18 +347,42 @@ components:
         oauth_secret:
           description: 'The oauth secret returned from twitter API'
           type: string  
-        user_id:
-          description: 'A numerical twitter id. This never changes. All user actions will be tied to this id'
-          type: string
         screen_name:
           description: 'The twitter screen name (handle) of the user. This can changed by the user in twitter'
           type: string
+        user_info:
+          description: The logged in user information
+          type: object
+          required:
+            - user_id
+            - referral_code
+            - eoa_address
+            - eoa_balance
+            - wallet_address
+            - wallet_balance
+          properties:
+            user_id:
+              description: The twitter user id
+              type: string
+            referral_code:
+              description: The referral code of this user.
+              type: string
+            eoa_address:
+              description: The EOA address of the user
+              type: string
+            eoa_balance:
+              description: The EOA balance of the address
+              type: string
+            wallet_address:
+              description: The Wallet address of the user
+              type: string
+            wallet_balance:
+              description: The wallet balance of the user
+              type: string      
         jwt_token:
           description: 'A JWT token that contains the user twitter user_id, issued time and lifetime of this token.'
           type: string
-        eoa_wallet:
-          description: 'The ERC4337 compliant wallet of the user'
-          type: string
+        
     GetUserRequest:
       description: Request payload to get user information
       type: object
