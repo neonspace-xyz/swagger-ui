@@ -1,0 +1,649 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Neonspace API'
+  description: Neonspace API documentation
+servers:
+  - url: https: //api.neonspace.io  
+paths:
+  /verify:
+    parameters:
+      - name: inviteCode
+        description: Validate the provided invite inviteCode
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/InviteCode'
+    get:
+      summary: Validate if the provided invite code is valid
+      responses:
+        '200':
+          description: The provided api code is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateResponse'
+        '401':
+          description: Invalid Invite Code
+        '500':
+          description: Server Error
+  /twitter/requestToken:          
+    get:
+      summary: Get a twitter request token.
+      responses:
+        '200':
+          description: Succesfully received a twitter request token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwtterOauthTokenResponse'
+        '401':
+          description: Invalid Invite Code
+        '500':
+          description: Server Error
+  /twitter/getAccessToken:
+    post:
+      summary: This should be called on the neonspace callback page (/twitter/callback?oauth_token=OAUTH_TOKEN&oauth_verifier=OAUTH_VERIFIER). The callback page is the redirect page from twitter. The paremeters requried for this query can be extracted from the url query params.
+      requestBody:
+        description: Payload to request an access token from the neonspace backend
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAccessTokenRequest'
+      responses:
+        '200':
+          description: Succesfully completed the oauth flow
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/GetAccessTokenResponse'
+        '500':
+          description: Failed to complete the oauth flow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /twitter/getUser:
+    post:
+      summary: Get twitter user id
+      requestBody:
+        description: Payload to get a twitter user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetUserRequest'
+      responses:
+        '200':
+          description: Succesfuly searched for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+        '500':
+          description: Failed to get provided user information or incorrect auth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/getUser:
+    get:
+      summary: Get neonspace profile
+      requestBody:
+          description: Payload to get the neospace user
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNeospaceUserRequest'
+      security:
+        - BearerAuth: []     
+      responses:
+        '200':
+          description: Succesfully received the provided user's neospace profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNeospaceUserResponse'
+        '500':
+          description: Failed to get provided user neospace or incorrect auth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'        
+  /user/mintNeonspaceNft: :
+    post:
+      summary: Mints a Neospace NFT
+      requestBody:
+        description: Payload to mint the neospace nft of another neospace user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MintNeonspaceNftRequest'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Succesfully minted the provided user's neomspace nft
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintNftResponse'
+        '500':
+          description: Failed to get mint a neonspace nft for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/mintNft:
+    post:
+      summary: Mints an NFT
+      requestBody:
+        description: Payload to mint an arbitary NFT.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MintNftRequest'
+      security:
+        - BearerAuth: []
+      responses:
+          '200':
+            description: Succesfully minted the provided user's neomspace nft
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MintNftResponse'
+          '500':
+            description: Failed to get mint an nft for the user
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'    
+  /user/getPost:
+    get:
+      summary: Get a user's posts history paginated
+      requestBody:
+        description: Payload to get a user's post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetUserPostRequest'
+      security:
+          - BearerAuth: []
+      responses:
+        '200':
+          description: Succesfully get a user's posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserPostResponse'
+        '500':
+            description: Failed to get posts.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+  /user/createPost:
+    post:
+      summary: Creates a post for the logged in user. 
+      requestBody:
+        description: Payload to create a post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserPostRequest'
+      security:
+          - BearerAuth: []
+      responses:
+        '200':
+          description: Succesfully created post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserPostResponse'
+        '500':
+            description: Failed to create post.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+  /user/editProfile:
+    post:
+      summary: Edits the logged in user's profile
+      requestBody:
+        description: Payload to edit the user profile
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditProfileRequest'
+      security:
+          - BearerAuth: []
+      responses:
+        '200':
+          description: Succesfully Edited Profile post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditProfileResponse'
+        '500':
+            description: Failed to edit profile.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'    
+  /user/updateVerification:
+    post:
+      summary: Verify or unverify another user
+      requestBody:
+        description: Payload to verify or unverify another user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVerificationRequest'
+      security:
+          - BearerAuth: []
+      responses:
+        '200':
+          description: Succesfully changed the verification status of a profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateVerificationResponse'
+        '500':
+            description: Failed to verify profile.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+  /chat/start:
+    get:
+      summary: Start chat session
+      requestBody:
+        description: The information to start the chat
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartChatRequest'
+      responses:
+        '200':
+          description: Succesfully started the chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartChatResponse'
+        '500':
+            description: Failed to start the chat.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'          
+
+
+components:
+  schemas:
+    InviteCode:
+      description: The Invite code provided by the user
+      type: string
+    ValidateResponse:
+      description: Returned by the API if the invite code is valid
+      type: object
+      required:
+        - valid
+      properties:
+        valid:
+          type: boolean
+    TwtterOauthTokenResponse:
+      description: Returns the twitter oauth token     
+      type: object
+      required:
+        - oauth_token
+      properties:
+        oauth_token:
+          type: string
+    GetAccessTokenRequest:
+      description: Payload to request an access token
+      type: object
+      required:
+        - oauth_token
+        - oauth_verifier
+      properties:
+        oauth_token:
+          type: string
+        oauth_verifier:
+          type: string
+    GetAccessTokenResponse:
+      description: Response payload once Oauth flow is complete. Contains the JWT token needed for future requests to protected routes
+      type: object
+      required:
+        - jwt_token
+        - eoa_wallet
+      properties:
+        oauth_token:
+          description: 'The oauth token returned from twitter API'
+          type: string
+        oauth_secret:
+          description: 'The oauth secret returned from twitter API'
+          type: string  
+        user_id:
+          description: 'A numerical twitter id. This never changes. All user actions will be tied to this id'
+          type: string
+        screen_name:
+          description: 'The twitter screen name (handle) of the user. This can changed by the user in twitter'
+          type: string
+        jwt_token:
+          description: 'A JWT token that contains the user twitter user_id, issued time and lifetime of this token.'
+          type: string
+        eoa_wallet:
+          description: 'The ERC4337 compliant wallet of the user'
+          type: string
+    GetUserRequest:
+      description: Request payload to get user information
+      type: object
+      required:
+        - screen_name
+      properties:
+        screen_name:
+          description: The screen name of the user to search
+          type: string
+    GetUserResponse:
+      description: Return the twitter user_id from a screenname.
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          description: The twitter user_id
+          type: string
+    GetNeospaceUserRequest:
+      description: Request payload to get a provided twitter users neospace profile
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          description: The user_id to search for
+          type: string  
+    GetNeospaceUserResponse:
+      description: Response payload to get a provided twitter user's neospace profile
+      type: object
+      required:
+        - user_id
+        - profile_image
+        - screen_name
+        - verified_by
+        - verified
+        - eoa_address
+        - eoa_balance
+        - creation_hash
+      properties:
+        user_id:
+          description: The X user id
+          type: string
+        profile_image:
+          description: The link to the image of the profile  
+          type: string
+        screen_name:
+          description: The screen name of the profile
+          type: string
+        verified_by:
+          description: Other neonspace users that has verified this user.
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                description: The X user id
+                type: string
+              profile_image:
+                description: The link to the image of the profile  
+                type: string
+              screen_name:
+                description: The screen name of the profile
+                type: string
+        verified:
+          description: Other neonspace users that was verified by this user.
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                description: The X user id
+                type: string
+              profile_image:
+                description: The link to the image of the profile  
+                type: string
+              screen_name:
+                description: The screen name of the profile
+                type: string
+        referral_code: 
+          description: The code used to create this account. If no code is used, this field will not be present
+          type: string
+        eoa_address:
+          description: The EOA address of the user. This is the account that owns the AA wallet.
+          type: string
+        eoa_balance:
+          description: The EOA wallet balance of the user.
+          type: string
+        aa_address:
+          description: The AA wallet address. This is what the neospace user will see and deposit funds into. This wallet is used for all neospace activities. Other users when quering for another profile will see this address. If this address is not returned, it means the onwer has chosen to hide the adress
+          type: string
+        aa_balance:
+          description: The balance in the AA wallet. If this address is not returned, it means the owner has decide to hide the address
+          type: string    
+    MintNftRequest:
+      description: Request payload to mint an arbitary NFT for a user that is logged in.
+      type: object
+      required:
+        - nft_address
+        - quantity
+      properties:
+        nft_address:
+          description: The NFT to mint for
+          type: string
+        quantity:
+          description: The quantity of NFT to mint
+          type: number  
+
+    MintNeonspaceNftRequest:
+      description: Request payload to mint a neospace NFT for a user (can be self)
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          description: The neospace user id to mint for. Can be your own NFT.
+          type: string
+    MintNftResponse:
+      description: Response payload when minting another user's nft
+      type: object
+      required:
+        - minter
+        - nft
+        - transaction
+      properties:
+        minter:
+          description: The minter address
+          type: string
+        nft:
+          description: The NFT address. This is really another user's AA wallet address
+          type: string
+        transaction:
+          description: The transaction hash of the mint.
+          type: string
+    GetUserPostRequest:
+      description: Request payload to get posts for a user
+      type: object
+      required:
+        - user_id
+        - page
+      properties:
+        user_id:
+          description: The user ID to get posts for
+          type: string
+        page:
+          description: The post page.
+          type: number  
+    GetUserPostResponse:
+      description: Response payload of the user posts
+      type: object
+      required:
+        - user_id
+        - posts
+      properties:
+        user_id:
+          description: The user ID the posts belong to
+          type: string
+        posts:
+          description: The list of posts
+          type: array
+          items:
+            type: object
+            required:
+              - user_id
+              - post
+              - published_timestamp
+            properties:
+              user_id:
+                description: The user id this post is owned by
+                type: string
+              post:
+                description: The post content itself
+                type: string
+              published_timestamp:
+                description: The published timestamp of the post
+                type: number  
+    CreateUserPostRequest:
+      description: request payload when creating a new post
+      type: object
+      required:
+        - post
+      properties:
+        post:
+          description: The post content
+          type: string
+    CreateUserPostResponse: 
+      description: response payload after creating a new post
+      type: object
+      required:
+        - user_id
+        - post
+        - published_timestamp
+      properties:
+        user_id:
+          description: The user id this post is owned by
+          type: string
+        post:
+          description: The post content itself
+          type: string
+        published_timestamp:
+          description: The published timestamp of the post
+          type: number 
+    EditProfileRequest:
+      description: Request payload when editing your own profile
+      type: object
+      required:
+        - hide_wallet
+        - bio
+      properties:
+        hide_wallet:
+          description: Toggle to hide the wallet from other users
+          type: boolean
+        bio:
+          description: The bio of the user.
+          type: string  
+    EditProfileResponse:   
+      description: response payload when editing your own profile  
+      required:
+        - hide_wallet
+        - bio
+      properties:
+        hide_wallet:
+          description: Toggle to hide the wallet from other users
+          type: boolean
+        bio:
+          description: The bio of the user.  
+    UpdateVerificationRequest:
+      description: The request when updating the verification status of another profile
+      type: object
+      required:
+        - verify
+      properties:
+        verify:
+          description: Set to true if want to verify the other user
+          type: boolean
+    UpdateVerificationResponse:
+      description: The response when updating the verification status of another profile
+      type: object
+      required:
+        - verify
+      properties:
+        verify:
+          description: Returns true if the user has been verified
+    StartChatRequest:
+      description: The request to start a chat
+      type: object
+      required:
+        - to
+        - token
+      properties:
+        to:
+          description: The user id to start the chat with
+          type: string
+        token:
+          description: The JWT token of the user
+          type: string
+        previous_message_count:
+          description: The number previous messages to pull. Default is 10 if not specified. Max is 100.
+          type: number
+    StartChatResponse:
+      description: The response when starting a chat session
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          description: The list of messages returned.
+          type: array
+          items:
+            description: A message sent between the users
+            type: object
+            required:
+              - to
+              - from
+              - message
+              - timestamp
+            properties:
+              to:
+                description: The user_id receipient of the message
+                type: string
+              from:
+                description: The user_id sender of the message
+                type: string
+              timestamp:
+                description: The time this message was sent
+                type: number  
+              message:
+                description: The message content
+                type: string         
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        message:
+          description: A human readable error message
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+# security:
+#   - ApiKey: []
