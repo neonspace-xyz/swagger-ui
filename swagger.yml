@@ -1,10 +1,10 @@
-openapi: "3.0.0"
+openapi: '3.0.0'
 info:
-  version: "1.0.0"
-  title: "Neonspace API"
+  version: '1.0.0'
+  title: 'Neonspace API'
   description: Neonspace API documentation
 servers:
-  - url: https://api.neonspace.io
+  - url: https://api.neonspace.io  
 paths:
   /verify:
     parameters:
@@ -13,33 +13,33 @@ paths:
         in: query
         required: true
         schema:
-          $ref: "#/components/schemas/InviteCode"
+          $ref: '#/components/schemas/InviteCode'
     get:
       summary: Validate if the provided invite code is valid
       responses:
-        "200":
+        '200':
           description: The provided api code is valid
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ValidateResponse"
-        "401":
+                $ref: '#/components/schemas/ValidateResponse'
+        '401':
           description: Invalid Invite Code
-        "500":
+        '500':
           description: Server Error
-  /twitter/requestToken:
+  /twitter/requestToken:          
     get:
       summary: Get a twitter request token.
       responses:
-        "200":
+        '200':
           description: Succesfully received a twitter request token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TwtterOauthTokenResponse"
-        "401":
+                $ref: '#/components/schemas/TwtterOauthTokenResponse'
+        '401':
           description: Invalid Invite Code
-        "500":
+        '500':
           description: Server Error
   /twitter/getAccessToken:
     post:
@@ -50,20 +50,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GetAccessTokenRequest"
+              $ref: '#/components/schemas/GetAccessTokenRequest'
       responses:
-        "200":
+        '200':
           description: Succesfully completed the oauth flow
           content:
             aplication/json:
               schema:
-                $ref: "#/components/schemas/GetAccessTokenResponse"
-        "500":
+                $ref: '#/components/schemas/GetAccessTokenResponse'
+        '500':
           description: Failed to complete the oauth flow
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /twitter/getUser:
     post:
       summary: Get twitter user id
@@ -73,45 +73,46 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GetUserRequest"
+              $ref: '#/components/schemas/GetUserRequest'
       responses:
-        "200":
+        '200':
           description: Succesfuly searched for the user
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetUserResponse"
-        "500":
+                $ref: '#/components/schemas/GetUserResponse'
+        '500':
           description: Failed to get provided user information or incorrect auth
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /user/getUser:
     get:
       summary: Get neonspace profile
-      requestBody:
-        description: Payload to get the neospace user
+      parameters:
+      - name: UserId
+        description: The user id to search for
+        in: query
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GetNeospaceUserRequest"
+        schema:
+          $ref: '#/components/schemas/UserId'
+          
       security:
-        - BearerAuth: []
+        - BearerAuth: []     
       responses:
-        "200":
+        '200':
           description: Succesfully received the provided user's neospace profile
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetNeospaceUserResponse"
-        "500":
+                $ref: '#/components/schemas/GetNeospaceUserResponse'
+        '500':
           description: Failed to get provided user neospace or incorrect auth
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'        
   /user/mintNeonspaceNft::
     post:
       summary: Mints a Neospace NFT
@@ -121,22 +122,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MintNeonspaceNftRequest"
+              $ref: '#/components/schemas/MintNeonspaceNftRequest'
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Succesfully minted the provided user's neomspace nft
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MintNftResponse"
-        "500":
+                $ref: '#/components/schemas/MintNftResponse'
+        '500':
           description: Failed to get mint a neonspace nft for the user
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /user/mintNft:
     post:
       summary: Mints an NFT
@@ -146,72 +147,78 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MintNftRequest"
+              $ref: '#/components/schemas/MintNftRequest'
       security:
         - BearerAuth: []
       responses:
-        "200":
-          description: Succesfully minted the provided user's neomspace nft
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MintNftResponse"
-        "500":
-          description: Failed to get mint an nft for the user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          '200':
+            description: Succesfully minted the provided user's neomspace nft
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MintNftResponse'
+          '500':
+            description: Failed to get mint an nft for the user
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'    
   /user/getPost:
     get:
       summary: Get a user's posts history paginated
-      requestBody:
-        description: Payload to get a user's post
+      parameters:
+      - name: UserId
+        description: The user id to search for
+        in: query
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GetUserPostRequest"
+        schema:
+          $ref: '#/components/schemas/UserId'
+      - name: page
+        description: The post page to get
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Page'    
       security:
-        - BearerAuth: []
+          - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Succesfully get a user's posts
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetUserPostResponse"
-        "500":
-          description: Failed to get posts.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/GetUserPostResponse'
+        '500':
+            description: Failed to get posts.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
   /user/createPost:
     post:
-      summary: Creates a post for the logged in user.
+      summary: Creates a post for the logged in user. 
       requestBody:
         description: Payload to create a post
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserPostRequest"
+              $ref: '#/components/schemas/CreateUserPostRequest'
       security:
-        - BearerAuth: []
+          - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Succesfully created post
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateUserPostResponse"
-        "500":
-          description: Failed to create post.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/CreateUserPostResponse'
+        '500':
+            description: Failed to create post.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
   /user/editProfile:
     post:
       summary: Edits the logged in user's profile
@@ -221,22 +228,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EditProfileRequest"
+              $ref: '#/components/schemas/EditProfileRequest'
       security:
-        - BearerAuth: []
+          - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Succesfully Edited Profile post
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EditProfileResponse"
-        "500":
-          description: Failed to edit profile.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/EditProfileResponse'
+        '500':
+            description: Failed to edit profile.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'    
   /user/updateVerification:
     post:
       summary: Verify or unverify another user
@@ -246,22 +253,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateVerificationRequest"
+              $ref: '#/components/schemas/UpdateVerificationRequest'
       security:
-        - BearerAuth: []
+          - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Succesfully changed the verification status of a profile
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateVerificationResponse"
-        "500":
-          description: Failed to verify profile.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/UpdateVerificationResponse'
+        '500':
+            description: Failed to verify profile.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
   /chat/start:
     get:
       summary: Start chat session
@@ -271,25 +278,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StartChatRequest"
+              $ref: '#/components/schemas/StartChatRequest'
       responses:
-        "200":
+        '200':
           description: Succesfully started the chat
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StartChatResponse"
-        "500":
-          description: Failed to start the chat.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/StartChatResponse'
+        '500':
+            description: Failed to start the chat.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'          
+
 
 components:
   schemas:
     InviteCode:
       description: The Invite code provided by the user
+      type: string
+    UserId:
+      description: The user id to search
+      type: string
+    Page:
+      description: The user id to search
       type: string
     ValidateResponse:
       description: Returned by the API if the invite code is valid
@@ -300,7 +314,7 @@ components:
         valid:
           type: boolean
     TwtterOauthTokenResponse:
-      description: Returns the twitter oauth token
+      description: Returns the twitter oauth token     
       type: object
       required:
         - oauth_token
@@ -326,22 +340,22 @@ components:
         - eoa_wallet
       properties:
         oauth_token:
-          description: "The oauth token returned from twitter API"
+          description: 'The oauth token returned from twitter API'
           type: string
         oauth_secret:
-          description: "The oauth secret returned from twitter API"
-          type: string
+          description: 'The oauth secret returned from twitter API'
+          type: string  
         user_id:
-          description: "A numerical twitter id. This never changes. All user actions will be tied to this id"
+          description: 'A numerical twitter id. This never changes. All user actions will be tied to this id'
           type: string
         screen_name:
-          description: "The twitter screen name (handle) of the user. This can changed by the user in twitter"
+          description: 'The twitter screen name (handle) of the user. This can changed by the user in twitter'
           type: string
         jwt_token:
-          description: "A JWT token that contains the user twitter user_id, issued time and lifetime of this token."
+          description: 'A JWT token that contains the user twitter user_id, issued time and lifetime of this token.'
           type: string
         eoa_wallet:
-          description: "The ERC4337 compliant wallet of the user"
+          description: 'The ERC4337 compliant wallet of the user'
           type: string
     GetUserRequest:
       description: Request payload to get user information
@@ -369,7 +383,7 @@ components:
       properties:
         user_id:
           description: The user_id to search for
-          type: string
+          type: string  
     GetNeospaceUserResponse:
       description: Response payload to get a provided twitter user's neospace profile
       type: object
@@ -387,7 +401,7 @@ components:
           description: The X user id
           type: string
         profile_image:
-          description: The link to the image of the profile
+          description: The link to the image of the profile  
           type: string
         screen_name:
           description: The screen name of the profile
@@ -402,7 +416,7 @@ components:
                 description: The X user id
                 type: string
               profile_image:
-                description: The link to the image of the profile
+                description: The link to the image of the profile  
                 type: string
               screen_name:
                 description: The screen name of the profile
@@ -417,12 +431,12 @@ components:
                 description: The X user id
                 type: string
               profile_image:
-                description: The link to the image of the profile
+                description: The link to the image of the profile  
                 type: string
               screen_name:
                 description: The screen name of the profile
                 type: string
-        referral_code:
+        referral_code: 
           description: The code used to create this account. If no code is used, this field will not be present
           type: string
         eoa_address:
@@ -436,7 +450,7 @@ components:
           type: string
         aa_balance:
           description: The balance in the AA wallet. If this address is not returned, it means the owner has decide to hide the address
-          type: string
+          type: string    
     MintNftRequest:
       description: Request payload to mint an arbitary NFT for a user that is logged in.
       type: object
@@ -449,7 +463,7 @@ components:
           type: string
         quantity:
           description: The quantity of NFT to mint
-          type: number
+          type: number  
 
     MintNeonspaceNftRequest:
       description: Request payload to mint a neospace NFT for a user (can be self)
@@ -489,7 +503,7 @@ components:
           type: string
         page:
           description: The post page.
-          type: number
+          type: number  
     GetUserPostResponse:
       description: Response payload of the user posts
       type: object
@@ -518,7 +532,7 @@ components:
                 type: string
               published_timestamp:
                 description: The published timestamp of the post
-                type: number
+                type: number  
     CreateUserPostRequest:
       description: request payload when creating a new post
       type: object
@@ -528,7 +542,7 @@ components:
         post:
           description: The post content
           type: string
-    CreateUserPostResponse:
+    CreateUserPostResponse: 
       description: response payload after creating a new post
       type: object
       required:
@@ -544,7 +558,7 @@ components:
           type: string
         published_timestamp:
           description: The published timestamp of the post
-          type: number
+          type: number 
     EditProfileRequest:
       description: Request payload when editing your own profile
       type: object
@@ -557,9 +571,9 @@ components:
           type: boolean
         bio:
           description: The bio of the user.
-          type: string
-    EditProfileResponse:
-      description: response payload when editing your own profile
+          type: string  
+    EditProfileResponse:   
+      description: response payload when editing your own profile  
       required:
         - hide_wallet
         - bio
@@ -568,7 +582,7 @@ components:
           description: Toggle to hide the wallet from other users
           type: boolean
         bio:
-          description: The bio of the user.
+          description: The bio of the user.  
     UpdateVerificationRequest:
       description: The request when updating the verification status of another profile
       type: object
@@ -628,10 +642,10 @@ components:
                 type: string
               timestamp:
                 description: The time this message was sent
-                type: number
+                type: number  
               message:
                 description: The message content
-                type: string
+                type: string         
     Error:
       type: object
       required:
