@@ -292,6 +292,24 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/Error'          
+  /impersonate/getToken:
+    post:
+      summary: Gets a JWT token to impersonate as that user
+      requestBody:
+        description: The user to impersonate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImpersonateRequest'
+      responses:
+        '200':
+          description: Succesfully impersonated a user
+          content:
+            text:
+              schema:
+                $ref: '#/components/schemas/ImpersonateResponse'
+
 
 
 components:
@@ -671,7 +689,19 @@ components:
                 type: number  
               message:
                 description: The message content
-                type: string         
+                type: string
+    ImpersonateRequest:
+      description: Request payload to get user token
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          description: The user_id of the user to search
+          type: string
+    ImpersonateResponse:
+      description: Response payload to succesfully get the JWT token
+      type: string
     Error:
       type: object
       required:
