@@ -632,10 +632,14 @@ components:
       type: object
       required:
         - verify
+        - user_id
       properties:
         verify:
           description: Set to true if want to verify the other user
           type: boolean
+        user_id:
+          description: The user id to update the verificaiton
+          type: string
     UpdateVerificationResponse:
       description: The response when updating the verification status of another profile
       type: object
