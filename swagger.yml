@@ -350,6 +350,9 @@ components:
           type: string
         oauth_verifier:
           type: string
+        referral_code:
+          description: Include a referral code if any
+          type: string  
     GetAccessTokenResponse:
       description: Response payload once Oauth flow is complete. Contains the JWT token needed for future requests to protected routes
       type: object
@@ -414,10 +417,22 @@ components:
       description: Return the twitter user_id from a screenname.
       type: object
       required:
-        - user_id
+        - id
+        - name
+        - username
+        - profile_image_url
       properties:
-        user_id:
+        id:
           description: The twitter user_id
+          type: string
+        name:
+          description: Twitter name
+          type: string
+        username:
+          description: Twitter username
+          type: string
+        profile_image_url:
+          description: Profile image
           type: string
     GetNeospaceUserRequest:
       description: Request payload to get a provided twitter users neospace profile
