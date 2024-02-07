@@ -167,7 +167,7 @@ paths:
     get:
       summary: Get a user's posts history paginated
       parameters:
-      - name: UserId
+      - name: userId
         description: The user id to search for
         in: query
         required: true
@@ -539,7 +539,7 @@ components:
       required:
         - minter
         - nft
-        - transaction
+        - transaction_hash
       properties:
         minter:
           description: The minter address
@@ -547,7 +547,7 @@ components:
         nft:
           description: The NFT address. This is really another user's AA wallet address
           type: string
-        transaction:
+        transaction_hash:
           description: The transaction hash of the mint.
           type: string
     GetUserPostRequest:
