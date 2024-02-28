@@ -113,7 +113,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'        
-  /user/mintNeonspaceNft::
+  /user/mintNeonspaceNft:
     post:
       summary: Mints a Neospace NFT
       requestBody:
@@ -269,6 +269,31 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/Error'
+  /user/nftInfo:
+    get:
+      summary: Returns all NFTs owned by the user
+      parameters:
+      - name: UserId
+        description: The user id to search for
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: The list of nfts owned by the user and the balance
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/ListOfNftsResponse'
+        '500':
+            description: Failed to verify profile.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'        
+
+
   /chat/start:
     get:
       summary: Start chat session
@@ -291,7 +316,24 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/Error'          
+                  $ref: '#/components/schemas/Error' 
+  /nft/currentMintInfo:
+    get:
+      summary: Simply returns the current mint info
+      responses:
+          '200':
+            description: The information regarding the latest current mint
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/GetCurrentMintResponse'
+          '500':
+            description: Failed to get current mint info
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error' 
+                                           
   /impersonate/getToken:
     post:
       summary: Gets a JWT token to impersonate as that user
@@ -721,6 +763,39 @@ components:
     ImpersonateResponse:
       description: Response payload to succesfully get the JWT token
       type: string
+    GetCurrentMintResponse:
+      description: The data of the current mint
+      required:
+        - nft_address
+        - mint_price
+      properties:
+        nft_address:
+          description: The NFT address to be minted for the current mint
+          type: string
+        mint_price:
+          description: The mint price for the NFT in wei
+          type: string
+    ListOfNftsResponse:
+      description: The list of NFTs owned by the user
+      type: object
+      required:
+        - balances
+      properties:
+        balances:
+          type: array
+          items:
+            type: object
+            required:
+              - nft_address
+              - balance
+            properties:
+              nft_address:
+                description: The nft address
+                type: string
+              balance:
+                description: The balance owned by this user for this NFT
+                type: string
+
     Error:
       type: object
       required:
