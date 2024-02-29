@@ -91,12 +91,12 @@ paths:
     get:
       summary: Get neonspace profile
       parameters:
-      - name: UserId
+      - name: userId
         description: The user id to search for
         in: query
         required: true
         schema:
-          $ref: '#/components/schemas/UserId'
+          $ref: '#/components/schemas/userId'
           
       security:
         - BearerAuth: []     
@@ -172,7 +172,7 @@ paths:
         in: query
         required: true
         schema:
-          $ref: '#/components/schemas/UserId'
+          $ref: '#/components/schemas/userId'
       - name: page
         description: The post page to get
         in: query
@@ -273,12 +273,12 @@ paths:
     get:
       summary: Returns all NFTs owned by the user
       parameters:
-      - name: UserId
+      - name: userId
         description: The user id to search for
         in: query
         required: true
         schema:
-          $ref: '#/components/schemas/UserId'
+          $ref: '#/components/schemas/userId'
       responses:
         '200':
           description: The list of nfts owned by the user and the balance
@@ -359,7 +359,7 @@ components:
     InviteCode:
       description: The Invite code provided by the user
       type: string
-    UserId:
+    userId:
       description: The user id to search
       type: string
     Page:
@@ -810,4 +810,3 @@ components:
       scheme: bearer
 # security:
 #   - ApiKey: []
-
