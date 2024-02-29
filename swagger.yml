@@ -272,6 +272,8 @@ paths:
   /user/nftInfo:
     get:
       summary: Returns all NFTs owned by the user
+      security:
+        - BearerAuth: []
       parameters:
       - name: userId
         description: The user id to search for
