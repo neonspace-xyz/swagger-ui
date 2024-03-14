@@ -494,6 +494,9 @@ components:
         - user_id
         - profile_image
         - screen_name
+        - name
+        - bio
+        - hide_wallet
         - verified_by
         - verified
         - eoa_address
@@ -508,6 +511,15 @@ components:
           type: string
         screen_name:
           description: The screen name of the profile
+          type: string
+        name:
+          description: The name of the user from X
+          type: string
+        bio:
+          description: The description of the users bio
+          type: string
+        hide_wallet:
+          description: User's setting to hide their wallet or not
           type: string
         verified_by:
           description: Other neonspace users that has verified this user.
