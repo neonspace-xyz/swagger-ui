@@ -41,7 +41,7 @@ paths:
           description: Invalid Invite Code
         '500':
           description: Server Error
-  /twitter/accessToken:
+  /twitter/getAccessToken:
     post:
       summary: This should be called on the neonspace callback page (/twitter/callback?oauth_token=OAUTH_TOKEN&oauth_verifier=OAUTH_VERIFIER). The callback page is the redirect page from twitter. The paremeters requried for this query can be extracted from the url query params.
       requestBody:
@@ -299,6 +299,8 @@ paths:
   /chat/start:
     get:
       summary: Start chat session
+      security:
+        - BearerAuth: []
       requestBody:
         description: The information to start the chat
         required: true
@@ -334,8 +336,60 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/Error' 
-                                           
+                  $ref: '#/components/schemas/Error'
+  /chat/history:
+    get:
+      summary: Get all past chats for the user                 
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: The page number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of past responses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPastChatsResponse'
+        '500':
+            description: Failed to get current mint info
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+  /nft/mintStatus:
+    get:
+      summary: Get the mint status for a mint aplication/json
+      security:
+        - BearerAuth: []
+      parameters:
+      - name: op_hash
+        description: The user ophash
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The response of the mint status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintStatusResponse'
+        '500':
+            description: Failed to get current mint info
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+      
+            
+
   /impersonate/getToken:
     post:
       summary: Gets a JWT token to impersonate as that user
@@ -375,6 +429,14 @@ components:
       properties:
         valid:
           type: boolean
+    MintStatusResponse:
+      description: The mint status response
+      type: object
+      required:
+        - status
+      properties:
+        status:
+            type: boolean
     TwtterOauthTokenResponse:
       description: Returns the twitter oauth token     
       type: object
@@ -494,9 +556,6 @@ components:
         - user_id
         - profile_image
         - screen_name
-        - name
-        - bio
-        - hide_wallet
         - verified_by
         - verified
         - eoa_address
@@ -511,15 +570,6 @@ components:
           type: string
         screen_name:
           description: The screen name of the profile
-          type: string
-        name:
-          description: The name of the user from X
-          type: string
-        bio:
-          description: The description of the users bio
-          type: string
-        hide_wallet:
-          description: User's setting to hide their wallet or not
           type: string
         verified_by:
           description: Other neonspace users that has verified this user.
@@ -619,6 +669,59 @@ components:
         page:
           description: The post page.
           type: number  
+    GetPastChatsResponse:
+      description: Response payload of the past chats
+      type: array
+      items:
+        type: object
+        required:
+          - to
+          - chat_id
+          - last_message
+        properties:
+          to:
+            description: The user this chat message is directed to
+            type: object
+            required:
+              - user_id
+              - profile_image
+              - name
+              - screen_name
+            properties:
+              user_id:
+                description: The user id of the user being messaged to
+                type: string
+              profile_image:
+                description: The profile image of the user
+                type: string
+              name:
+                description: The name of the user
+                type: string
+              screen_name:
+                description: The screen name of the user
+                type: string
+          chat_id:
+            description: The chat id
+            type: string
+          last_message:
+            description: The last message sent for rendering
+            type: object
+            required:
+              - from
+              - to
+              - message
+            properties:
+              from:
+                description: The user the message is directed to
+                type: string
+              to: 
+                description: The message it is from
+                type: string
+              message:
+                description: The message
+                type: string
+
+          
     GetUserPostResponse:
       description: Response payload of the user posts
       type: object
